@@ -1,0 +1,1 @@
+print("S-a initializat modull de baza de date.")
