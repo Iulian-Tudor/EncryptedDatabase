@@ -1,2 +1,4 @@
 # EncrypteDatabase
 Project in Python for my 3rd year of University
+
+The task at hand requires me to make a tool capable of encrypting files and then storing them into a Database of my choice. It should also support reading files from the database, meaning decrypting them on demand, as well as deleting files from it altogether. To be noted I wasn't allowed to use specialized libraries such as the Cryptography library from Python, meaning the encryption and decryption is to be implemented manually. The project demands asymetric encryption, and I choose to go with Hybrid encryption, which combines both symetric and asymetric encryption for better efficiency. The database chosen for easy managament is MongoDB, a no-SQL Database, that stores data in JSON format, which makes it ideal, as the tool doesn't require complex database schemas in order to be effective and organized.
