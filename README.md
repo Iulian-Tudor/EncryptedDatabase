@@ -5,11 +5,9 @@ The task at hand requires me to make a tool capable of encrypting files and then
 
 **The Project is separated in modules:**
   _1. Encryption module:_ 
-  
     Anything related to the cryptography involved part of the project can be found here. Mandatory funtions being those to encrypt and decrypt the message/file. But I plan to eventually add other features, such as different kinds of symetric and asymetric encryption, and perhaps even attempt to implement things more complex, such as attribute based encryption.
 
   _2. Database module:_ 
-  
     Pretty self explanatory, it's the module where anything that has to interact with the Database goes into, whether we're talking about adding, removing or reading a file from the Database. It's, perhaps, the simplest and smallest module of them all, as once it's written, it, more or less, remains untouched.
 
   _Future modules could be added, if I decide I want to incorporate 2 other projects into this one._
