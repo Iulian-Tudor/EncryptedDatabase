@@ -7,36 +7,43 @@ client = MongoClient('mongodb://localhost:27017/')
 db = client['EncryptedDatabase']
 collection = db['file_collection']
 
-def add_file_to_database(filepath, public_key):
-    with open(filepath, 'r') as file:
+def add_file_to_database(file_path, public_key):
+    with open(file_path, 'r') as file:
         content = file.read()
 
-    encrypted_content = encrypt(content, public_key)
-    encrypted_filepath = filepath + '.enc'
+    encrypted_content = encrypt(public_key, content)
 
-    with open(encrypted_filepath + '.enc', 'w') as file:
-        file.write(''.join(map(lambda x: str(x), encrypted_content)))
+    data = {
+        'file_path': file_path,
+        'encrypted_content': encrypted_content
+    }
 
-    collection.insert_one({'filename': os.path.basename(filepath), 'location': encrypted_filepath, 'public_key': public_key})
+    collection.insert_one(data)
+    print("File added to the database.")
 
+def get_file_from_database(file_path, private_key):
+    file_data = collection.find_one({'file_path': file_path})
 
-def get_file_from_database(filepath, private_key):
-    file_data = collection.find_one({'filename': filepath})
+    if file_data:
+        encrypted_content = file_data['encrypted_content']
+        decrypted_content = decrypt(private_key, encrypted_content)
 
-    with open(file_data['location'], 'r') as file:
-        encrypted_content = list(map(lambda x: int(x), file.readlines()))
+        print("\nDecrypted content:")
+        print(decrypted_content)
+    else:
+        print("File not found in the database.")
 
-        content = decrypt(private_key, encrypted_content)
-        print(content)
+def delete_file(file_path):
+    result = collection.delete_one({'file_path': file_path})
 
-
-def delete_file(filepath):
-    file_data = collection.find_one({'filename': filepath})
-    os.remove(file_data['location'])
-    collection.delete_one({'filename': filepath})
-
+    if result.deleted_count > 0:
+        print("File deleted from the database.")
+    else:
+        print("File not found in the database.")
 
 def view_database():
     files = collection.find()
+
+    print("\nDatabase content:")
     for file in files:
-        print(f'Filename: {file["filename"]}, Location: {file["location"]}, Public Key: {file["public_key"]}')
+        print(f"File: {file['file_path']}")

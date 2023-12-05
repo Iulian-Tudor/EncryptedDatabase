@@ -9,9 +9,9 @@ def main():
     public_key, private_key = key_generator(3, 11)
 
     menu = {
-        1: lambda: add_file_to_database(input("\Enter file path: "), public_key),
-        2: lambda: get_file_from_database(input("\Enter file path: "), private_key),
-        3: lambda: delete_file(input("\Enter file path: ")),
+        1: lambda: add_file_to_database(input("\nEnter file path: "), public_key),
+        2: lambda: get_file_from_database(input("\nEnter file path: "), private_key),
+        3: lambda: delete_file(input("\n1Enter file path: ")),
         4: view_database,
         5: lambda: sys.exit(),
     }
