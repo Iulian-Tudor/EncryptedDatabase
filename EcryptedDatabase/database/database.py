@@ -15,11 +15,7 @@ def add_file_to_database(filename, public_key):
     with open(filename + '.enc', 'w') as file:
         file.write(''.join(map(lambda x: str(x), encrypted_content)))
 
-    collection.insert_one({
-        'filename': filename,
-        'location': filename + '.enc'
-        'public_key': public_key
-    })
+    collection.insert_one({'filename': filename, 'location': filename + '.enc', 'public_key': public_key})
 
 
 def get_file_from_database(filename, private_key):
