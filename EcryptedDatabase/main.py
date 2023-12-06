@@ -1,18 +1,22 @@
 import sys
-sys.path.insert(0, 'EcryptedDatabase/database')
-sys.path.insert(0, 'EcryptedDatabase/encryption')
+sys.path.insert(0, 'EncryptedDatabase/database')
+sys.path.insert(0, 'EncryptedDatabase/encryption')
 
-from database import add_file_to_database, get_file_from_database, delete_file, view_database
-from encryption import key_generator
+from database.database import Database
+from encryption.encryption import Encryption
+
 def main():
 
-    public_key, private_key = key_generator(3, 11)
+    database = Database()
+    p=599
+    q=101
+    public_key, private_key = Encryption.generate_key_pair(p,q)
 
     menu = {
-        1: lambda: add_file_to_database(input("\nEnter file path: "), public_key),
-        2: lambda: get_file_from_database(input("\nEnter file path: "), private_key),
-        3: lambda: delete_file(input("\n1Enter file path: ")),
-        4: view_database,
+        1: lambda: database.add_file_to_database(database, input("\nEnter file path: "), public_key),
+        2: lambda: database.get_file_from_database(database, input("\nEnter file name: "), private_key),
+        3: lambda: database.delete_file(database, input("\nEnter file name: ")),
+        4: lambda: database.view_database(database),
         5: lambda: sys.exit(),
     }
 
