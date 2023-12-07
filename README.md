@@ -7,7 +7,7 @@ The task at hand requires me to make a tool capable of encrypting files and then
 
 _1. Encryption module:_ Anything related to the cryptography involved part of the project can be found here, regarding asymetric RSA . Mandatory funtions being those to encrypt and decrypt the message/file.
 
-_2. Hybrid module:_A rudimentary hybrid cryptography implementation, using a simple XOR for the symmetric part and the already existing RSA asymmetric functions for the asymmetric part. Mainly composed to be able to handle images and performance matters.
+_2. Hybrid module:_ A rudimentary hybrid cryptography implementation, using a simple XOR for the symmetric part and the already existing RSA asymmetric functions for the asymmetric part. Mainly composed to be able to handle images and performance matters.
 
 _3. Database module:_ Pretty self explanatory, it's the module where anything that has to interact with the Database goes into, whether we're talking about adding, removing or reading a file from the Database. It's, perhaps, the simplest and smallest module of them all, as once it's written, it, more or less, remains untouched.
 
