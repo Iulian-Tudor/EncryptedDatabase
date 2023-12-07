@@ -1,1 +1,1 @@
-print("S-a initializat modulul de criptare.")
+print("S-a initializat modulul de criptare asimetrica.")
