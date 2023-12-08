@@ -8,8 +8,6 @@ from encryption.encryption import Encryption
 from hybrid.hybrid import HybridEncryption
 
 
-
-
 class Database:
 
     def __init__(self):
@@ -62,7 +60,7 @@ class Database:
                 proceed = False
 
             encrypted_content = pickle.dumps(encrypted_content)
-            encrypted_directory = 'D:\\Anul3\\Python\\EncryptedDatabase\\EncryptedTexts'
+            encrypted_directory = 'D:\\Anul3\\Python\\EncrypteDatabase\\EncryptedDatabase\\EncryptedTexts'
 
             encrypted_file_path = os.path.join(encrypted_directory, f"{os.path.basename(file_path)}.encrypted")
             with open(encrypted_file_path, 'wb') as encrypted_file:
@@ -110,7 +108,7 @@ class Database:
             except UnicodeDecodeError:
                 print("\nDecrypted content is not valid UTF-8 text and cannot be printed to terminal.")
 
-            decrypted_directory = 'D:\\Anul3\\Python\\EncryptedDatabase\\DecryptedTexts'
+            decrypted_directory = 'D:\\Anul3\\Python\\EncrypteDatabase\\EncryptedDatabase\\DecryptedTexts'
             decrypted_file_path = os.path.join(decrypted_directory, f"decrypted_{file_name}")
 
             with open(decrypted_file_path, 'wb') as output_file:
