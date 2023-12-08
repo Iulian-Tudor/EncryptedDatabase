@@ -1,9 +1,5 @@
 import sys
 
-sys.path.insert(0, 'EncryptedDatabase/database')
-sys.path.insert(0, 'EncryptedDatabase/encryption')
-sys.path.insert(0, 'EncryptedDatabase/hybrid')
-
 from database.database import Database
 from encryption.encryption import Encryption
 from hybrid.hybrid import HybridEncryption

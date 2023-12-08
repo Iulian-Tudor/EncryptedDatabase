@@ -1,1 +1,0 @@
-print("S-a initializat modulul de criptare simetrica.")
