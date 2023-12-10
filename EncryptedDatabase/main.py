@@ -6,6 +6,14 @@ from hybrid.hybrid import HybridEncryption
 
 
 def main():
+    """
+    Main function to run the application.
+
+    This function initializes the database and encryption keys, 
+    then enters a loop to present a menu to the user. The user can 
+    choose to add a file to the database, retrieve a file, delete a 
+    file, delete all files, view the database, or exit the program.
+    """
     database = Database()
     p = 599
     q = 101
@@ -38,7 +46,6 @@ def main():
             menu[choice]()
         else:
             print("Invalid choice")
-
 
 
 if __name__ == '__main__':

@@ -12,13 +12,35 @@ encrypted_directory = 'D:\\Anul3\\Python\\EncrypteDatabase\\EncryptedDatabase\\E
 
 
 class Database:
+    """
+    Class for database operations.
 
+    This class provides methods to add a file to the database, retrieve a file from the database,
+    delete a file from the database, delete all files from the database, and view the database.
+    """
     def __init__(self):
+        """
+        Initialize the Database class.
+
+        This method initializes the MongoDB client, database, and collection.
+        """
         self.client = MongoClient('localhost', 27017)
         self.db = self.client['EncryptedDatabase']
         self.collection = self.db['file_collection']
 
     def add_file_to_database(self, file_path, public_key, symmetric_key, encryption_method):
+        """
+        Add a file to the database.
+
+        This method takes a file path, a public key, a symmetric key, and an encryption method,
+        and adds the file to the database, in its encrypted form, also storing aditional data if required.
+
+        It expects the user to choose whether he wants to encrypt asymmetrically (RSA) or use Hybrid Encryption
+        to proceed and then apelates the coresponding encryption functions.
+
+        Once encryption is done, it also creates a variant of the encrypted_content locally, in the encrypted_directory,
+        for convenience. This function also makes sure to perform checks regarding validify of sample and encryption attributes.
+        """
         proceed = True
 
         # Check if file exists
@@ -83,6 +105,13 @@ class Database:
             print("File added to the database.")
 
     def get_file_from_database(self, file_name, private_key):
+        """
+        Retrieve a file from the database.
+
+        This method takes a file name and a private key, and retrieves the file from the database,
+        in they decrypted form and either prints them to terminal if possible, or creates the file
+        in an decrypted_directory to see the output.
+        """
         file_data = self.collection.find_one({'file_name': file_name})
 
         if file_data:
@@ -119,6 +148,12 @@ class Database:
             print("File not found in the database.")
 
     def delete_file(self, file_names):
+        """
+        Delete a file from the database.
+
+        This method takes a list of file names and deletes the files from the database,
+        as well as the locally stored encrypted variant of it.
+        """
         for file_name in file_names:
             file_data = self.collection.find_one({'file_name': file_name})
 
@@ -138,10 +173,23 @@ class Database:
                 print("File not found in the database.")
 
     def delete_all_files(self):
+        """
+        Delete all files from the database.
+
+        This method deletes all files from the database,
+        made for convenience to wipe it clean.
+        """
         self.collection.delete_many({})
         print("All files deleted from the database.")
 
     def view_database(self):
+        """
+        View the database.
+
+        This method prints the content of the database,
+        just so one can see their names. Inforation such as keys,
+        even if encrypted, are not shown here.
+        """
         files = self.collection.find()
 
         print("\nDatabase content:")
