@@ -36,12 +36,12 @@ class Encryption:
 
     @staticmethod
     def encrypt_file(content, public_key):
-    # Encrypt the file content using the public key
+        # Encrypt the file content using the public key
         e, n = public_key
         return [(byte ** e) % n for byte in content]
 
     @staticmethod
     def decrypt_file(encrypted_content, private_key):
-    # Decrypt the file content using the private key
+        # Decrypt the file content using the private key
         d, n = private_key
         return bytes((byte ** d) % n for byte in encrypted_content)

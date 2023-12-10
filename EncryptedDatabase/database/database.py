@@ -20,14 +20,14 @@ class Database:
 
     def add_file_to_database(self, file_path, public_key, symmetric_key, encryption_method):
         proceed = True
-        
+
         # Check if file exists
         if not os.path.exists(file_path):
             print(f"File {file_path} does not exist.")
             proceed = False
 
         # Check if file is too large
-        max_size = 10**8 #Max size of file in bytes
+        max_size = 10 ** 8  # Max size of file in bytes
         if proceed and os.path.getsize(file_path) > max_size:
             print(f"File {file_path} is too large.")
             proceed = False
@@ -73,7 +73,7 @@ class Database:
                 'file_name': os.path.basename(file_path),
                 'encrypted_file_path': encrypted_file_path,
                 'encrypted_content': encrypted_content,
-                'encryption_method' : encryption_method
+                'encryption_method': encryption_method
             }
 
             if encryption_method.lower() == 'hybrid':
@@ -82,7 +82,7 @@ class Database:
             self.collection.insert_one(data)
             print("File added to the database.")
 
-    def get_file_from_database(self, file_name, private_key, symmetric_key):
+    def get_file_from_database(self, file_name, private_key):
         file_data = self.collection.find_one({'file_name': file_name})
 
         if file_data:
@@ -93,7 +93,7 @@ class Database:
             print(encrypted_content)
 
             encrypted_content = pickle.loads(encrypted_content)
-            
+
             if encryption_method.lower() == 'rsa':
                 decrypted_content = Encryption.decrypt_file(encrypted_content, private_key)
             elif encryption_method.lower() == 'hybrid':
