@@ -5,7 +5,7 @@ from encryption.encryption import Encryption
 from hybrid.hybrid import HybridEncryption
 
 
-def main():
+def main() -> None:
     """
     Main function to run the application.
 
@@ -13,6 +13,9 @@ def main():
     then enters a loop to present a menu to the user. The user can 
     choose to add a file to the database, retrieve a file, delete a 
     file, delete all files, view the database, or exit the program.
+
+    Returns:
+    None
     """
     database = Database()
     p = 599

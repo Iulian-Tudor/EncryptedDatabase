@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>encryption package &mdash; Encrypted Database 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="hybrid package" href="hybrid.html" />
+    <link rel="prev" title="database package" href="database.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Encrypted Database
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">EncryptedDatabase</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="database.html">database package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">encryption package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-encryption.encryption">encryption.encryption module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#encryption.encryption.Encryption"><code class="docutils literal notranslate"><span class="pre">Encryption</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#encryption.encryption.extended_gcd"><code class="docutils literal notranslate"><span class="pre">extended_gcd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#encryption.encryption.modinv"><code class="docutils literal notranslate"><span class="pre">modinv()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-encryption">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hybrid.html">hybrid package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Encrypted Database</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">EncryptedDatabase</a></li>
+      <li class="breadcrumb-item active">encryption package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/encryption.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="encryption-package">
+<h1>encryption package<a class="headerlink" href="#encryption-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-encryption.encryption">
+<span id="encryption-encryption-module"></span><h2>encryption.encryption module<a class="headerlink" href="#module-encryption.encryption" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="encryption.encryption.Encryption">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">encryption.encryption.</span></span><span class="sig-name descname"><span class="pre">Encryption</span></span><a class="reference internal" href="_modules/encryption/encryption.html#Encryption"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#encryption.encryption.Encryption" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for encryption.</p>
+<p>This class provides methods to generate a key pair, encrypt a file, and decrypt a file,
+with asymmetric RSA.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="encryption.encryption.Encryption.decrypt_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decrypt_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encrypted_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">private_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="_modules/encryption/encryption.html#Encryption.decrypt_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#encryption.encryption.Encryption.decrypt_file" title="Link to this definition"></a></dt>
+<dd><p>Decrypt the file content using the private key.</p>
+<p>This method takes the encrypted content of a file and a private key, and decrypts the content,
+doing the reverse of the encryption process.</p>
+<p>Parameters:
+encrypted_content (bytes): The encrypted content of the file to be decrypted.
+private_key (tuple): The private key to be used for decryption.</p>
+<p>Returns:
+bytes: The decrypted content of the file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="encryption.encryption.Encryption.encrypt_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">encrypt_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/encryption/encryption.html#Encryption.encrypt_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#encryption.encryption.Encryption.encrypt_file" title="Link to this definition"></a></dt>
+<dd><p>Encrypt the file content using the public key.</p>
+<p>This method takes the content of a file and a public key, and encrypts the content,
+asymmetrically, with RSA.</p>
+<p>Parameters:
+content (bytes): The content of the file to be encrypted.
+public_key (tuple): The public key to be used for encryption.</p>
+<p>Returns:
+list[int]: The encrypted content of the file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="encryption.encryption.Encryption.generate_key_pair">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_key_pair</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/encryption/encryption.html#Encryption.generate_key_pair"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#encryption.encryption.Encryption.generate_key_pair" title="Link to this definition"></a></dt>
+<dd><p>Generate a public and private key pair.</p>
+<p>This method takes two prime numbers, p and q, and generates a public and private key pair.
+The RSA modulus is calculated as the product of p and q.
+The totient is calculated as the product of (p-1) and (q-1).</p>
+<p>The totient is the number of co-prime numbers with n, smaller than n and greater than 1.
+The public exponent is calculated as the first number e, greater than 2, such that gcd(e, totient) = 1.
+The private exponent is calculated as the multiplicative inverse of the public exponent modulo totient.</p>
+<p>Parameters:
+p (int): The first prime number.
+q (int): The second prime number.</p>
+<p>Returns:
+tuple: A tuple containing the public and private key pair.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption.encryption.extended_gcd">
+<span class="sig-prename descclassname"><span class="pre">encryption.encryption.</span></span><span class="sig-name descname"><span class="pre">extended_gcd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aa</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/encryption/encryption.html#extended_gcd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#encryption.encryption.extended_gcd" title="Link to this definition"></a></dt>
+<dd><p>Function to find the greatest common divisor (gcd).</p>
+<p>This function uses the Extended Euclidean Algorithm to find the gcd of two numbers aa and bb.
+It also finds the coefficients x and y in the equation: gcd(aa, bb) = aa*x + bb*y.
+The Extended Euclidean Algorithm is particularly useful when aa and bb are large numbers.</p>
+<p>Parameters:
+aa (int): The first number.
+bb (int): The second number.</p>
+<p>Returns:
+tuple: A tuple containing the gcd and the coefficients x and y.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="encryption.encryption.modinv">
+<span class="sig-prename descclassname"><span class="pre">encryption.encryption.</span></span><span class="sig-name descname"><span class="pre">modinv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/encryption/encryption.html#modinv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#encryption.encryption.modinv" title="Link to this definition"></a></dt>
+<dd><p>Function to produce the private-key exponent.</p>
+<p>This function uses the Extended Euclidean Algorithm to find the multiplicative inverse of a modulo m.
+The multiplicative inverse of a modulo m is a number x such that (a*x) % m = 1.
+This is used in the RSA algorithm to generate the private key.</p>
+<p>Parameters:
+a (int): The number for which to find the multiplicative inverse.
+m (int): The modulo.</p>
+<p>Returns:
+int: The multiplicative inverse of a modulo m.</p>
+</dd></dl>
+
+</section>
+<section id="module-encryption">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-encryption" title="Link to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="database.html" class="btn btn-neutral float-left" title="database package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hybrid.html" class="btn btn-neutral float-right" title="hybrid package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, ITScutaru.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

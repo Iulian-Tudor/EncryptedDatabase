@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>database.database &mdash; Encrypted Database 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Encrypted Database
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">EncryptedDatabase</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Encrypted Database</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">database.database</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for database.database</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">imghdr</span>
+<span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
+
+<span class="kn">from</span> <span class="nn">encryption.encryption</span> <span class="kn">import</span> <span class="n">Encryption</span>
+<span class="kn">from</span> <span class="nn">hybrid.hybrid</span> <span class="kn">import</span> <span class="n">HybridEncryption</span>
+
+<span class="n">decrypted_directory</span> <span class="o">=</span> <span class="s1">&#39;D:</span><span class="se">\\</span><span class="s1">Anul3</span><span class="se">\\</span><span class="s1">Python</span><span class="se">\\</span><span class="s1">EncrypteDatabase</span><span class="se">\\</span><span class="s1">EncryptedDatabase</span><span class="se">\\</span><span class="s1">DecryptedTexts&#39;</span>
+<span class="n">encrypted_directory</span> <span class="o">=</span> <span class="s1">&#39;D:</span><span class="se">\\</span><span class="s1">Anul3</span><span class="se">\\</span><span class="s1">Python</span><span class="se">\\</span><span class="s1">EncrypteDatabase</span><span class="se">\\</span><span class="s1">EncryptedDatabase</span><span class="se">\\</span><span class="s1">EncryptedTexts&#39;</span>
+
+
+<div class="viewcode-block" id="Database">
+<a class="viewcode-back" href="../../database.html#database.database.Database">[docs]</a>
+<span class="k">class</span> <span class="nc">Database</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for database operations.</span>
+
+<span class="sd">    This class provides methods to add a file to the database, retrieve a file from the database,</span>
+<span class="sd">    delete a file from the database, delete all files from the database, and view the database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Database class.</span>
+
+<span class="sd">        This method initializes the MongoDB client, database, and collection.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">27017</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">[</span><span class="s1">&#39;EncryptedDatabase&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="p">[</span><span class="s1">&#39;file_collection&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Database.add_file_to_database">
+<a class="viewcode-back" href="../../database.html#database.database.Database.add_file_to_database">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_file_to_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">public_key</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">],</span> <span class="n">symmetric_key</span><span class="p">:</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">encryption_method</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a file to the database.</span>
+
+<span class="sd">        This method takes a file path, a public key, a symmetric key, and an encryption method,</span>
+<span class="sd">        and adds the file to the database, in its encrypted form, also storing aditional data if required.</span>
+
+<span class="sd">        It expects the user to choose whether he wants to encrypt asymmetrically (RSA) or use Hybrid Encryption</span>
+<span class="sd">        to proceed and then apelates the coresponding encryption functions.</span>
+
+<span class="sd">        Once encryption is done, it also creates a variant of the encrypted_content locally, in the encrypted_directory,</span>
+<span class="sd">        for convenience. This function also makes sure to perform checks regarding validify of sample and encryption attributes.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        file_path (str): The path to the file to be added to the database.</span>
+<span class="sd">        public_key (tuple): The public key to be used for encryption.</span>
+<span class="sd">        symmetric_key (bytes): The symmetric key to be used for encryption.</span>
+<span class="sd">        encryption_method (str): The encryption method to be used for encryption.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">proceed</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Check if file exists</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+            <span class="n">proceed</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Check if file is too large</span>
+        <span class="n">max_size</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="mi">8</span>  <span class="c1"># Max size of file in bytes</span>
+        <span class="k">if</span> <span class="n">proceed</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_size</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2"> is too large.&quot;</span><span class="p">)</span>
+            <span class="n">proceed</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Check if file is empty</span>
+        <span class="k">if</span> <span class="n">proceed</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2"> is empty.&quot;</span><span class="p">)</span>
+            <span class="n">proceed</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Key validation</span>
+        <span class="n">e</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">public_key</span>
+        <span class="k">if</span> <span class="n">proceed</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">e</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid public key.&quot;</span><span class="p">)</span>
+            <span class="n">proceed</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">proceed</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">imghdr</span><span class="o">.</span><span class="n">what</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Original content:&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+            <span class="n">encrypted_content</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">encrypted_symmetric_key</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="n">encryption_method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;rsa&#39;</span><span class="p">:</span>
+                <span class="n">encrypted_content</span> <span class="o">=</span> <span class="n">Encryption</span><span class="o">.</span><span class="n">encrypt_file</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">public_key</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">encryption_method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">:</span>
+                <span class="n">encrypted_content</span> <span class="o">=</span> <span class="n">HybridEncryption</span><span class="o">.</span><span class="n">encrypt_file_content</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">symmetric_key</span><span class="p">)</span>
+                <span class="n">encrypted_symmetric_key</span> <span class="o">=</span> <span class="n">HybridEncryption</span><span class="o">.</span><span class="n">encrypt_symmetric_key</span><span class="p">(</span><span class="n">symmetric_key</span><span class="p">,</span> <span class="n">public_key</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid encryption method.&quot;</span><span class="p">)</span>
+                <span class="n">proceed</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="n">encrypted_content</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">encrypted_content</span><span class="p">)</span>
+
+            <span class="n">encrypted_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">encrypted_directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="si">}</span><span class="s2">.encrypted&quot;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">encrypted_file_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">encrypted_file</span><span class="p">:</span>
+                <span class="c1"># Write the encrypted content directly to the file</span>
+                <span class="n">encrypted_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">encrypted_content</span><span class="p">)</span>
+
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file_path</span><span class="p">),</span>
+                <span class="s1">&#39;encrypted_file_path&#39;</span><span class="p">:</span> <span class="n">encrypted_file_path</span><span class="p">,</span>
+                <span class="s1">&#39;encrypted_content&#39;</span><span class="p">:</span> <span class="n">encrypted_content</span><span class="p">,</span>
+                <span class="s1">&#39;encryption_method&#39;</span><span class="p">:</span> <span class="n">encryption_method</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="n">encryption_method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="s1">&#39;encrypted_symmetric_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">encrypted_symmetric_key</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File added to the database.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.get_file_from_database">
+<a class="viewcode-back" href="../../database.html#database.database.Database.get_file_from_database">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_file_from_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">private_key</span><span class="p">:</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve a file from the database.</span>
+
+<span class="sd">        This method takes a file name and a private key, and retrieves the file from the database,</span>
+<span class="sd">        in they decrypted form and either prints them to terminal if possible, or creates the file</span>
+<span class="sd">        in an decrypted_directory to see the output.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        file_name (str): The name of the file to be retrieved from the database.</span>
+<span class="sd">        private_key (tuple): The private key to be used for decryption.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">file_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="n">file_name</span><span class="p">})</span>
+
+        <span class="k">if</span> <span class="n">file_data</span><span class="p">:</span>
+            <span class="n">encrypted_content</span> <span class="o">=</span> <span class="n">file_data</span><span class="p">[</span><span class="s1">&#39;encrypted_content&#39;</span><span class="p">]</span>
+            <span class="n">encryption_method</span> <span class="o">=</span> <span class="n">file_data</span><span class="p">[</span><span class="s1">&#39;encryption_method&#39;</span><span class="p">]</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Encrypted content:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">encrypted_content</span><span class="p">)</span>
+
+            <span class="n">encrypted_content</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">encrypted_content</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">encryption_method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;rsa&#39;</span><span class="p">:</span>
+                <span class="n">decrypted_content</span> <span class="o">=</span> <span class="n">Encryption</span><span class="o">.</span><span class="n">decrypt_file</span><span class="p">(</span><span class="n">encrypted_content</span><span class="p">,</span> <span class="n">private_key</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">encryption_method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">:</span>
+                <span class="n">encrypted_symmetric_key</span> <span class="o">=</span> <span class="n">file_data</span><span class="p">[</span><span class="s1">&#39;encrypted_symmetric_key&#39;</span><span class="p">]</span>
+                <span class="n">decrypted_symmetric_key</span> <span class="o">=</span> <span class="n">HybridEncryption</span><span class="o">.</span><span class="n">decrypt_symmetric_key</span><span class="p">(</span><span class="n">encrypted_symmetric_key</span><span class="p">,</span> <span class="n">private_key</span><span class="p">)</span>
+                <span class="n">decrypted_content</span> <span class="o">=</span> <span class="n">HybridEncryption</span><span class="o">.</span><span class="n">decrypt_file_content</span><span class="p">(</span><span class="n">encrypted_content</span><span class="p">,</span> <span class="n">decrypted_symmetric_key</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid encryption method.&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Decrypted content:&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">decrypted_content</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Decrypted content is not valid UTF-8 text and cannot be printed to terminal.&quot;</span><span class="p">)</span>
+
+            <span class="n">decrypted_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">decrypted_directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;decrypted_</span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">decrypted_file_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
+                <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">decrypted_content</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File not found in the database.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.delete_file">
+<a class="viewcode-back" href="../../database.html#database.database.Database.delete_file">[docs]</a>
+    <span class="k">def</span> <span class="nf">delete_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_names</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete a file from the database.</span>
+
+<span class="sd">        This method takes a list of file names and deletes the files from the database,</span>
+<span class="sd">        as well as the locally stored encrypted variant of it.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        file_names (list): The list of file names to be deleted from the database.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span><span class="p">:</span>
+            <span class="n">file_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="n">file_name</span><span class="p">})</span>
+
+            <span class="k">if</span> <span class="n">file_data</span><span class="p">:</span>
+                <span class="c1"># Delete from the local encrypted directory</span>
+                <span class="n">encrypted_file_path</span> <span class="o">=</span> <span class="n">file_data</span><span class="p">[</span><span class="s1">&#39;encrypted_file_path&#39;</span><span class="p">]</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">encrypted_file_path</span><span class="p">)</span>
+
+                <span class="c1"># Delete from the database</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">delete_one</span><span class="p">({</span><span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="n">file_name</span><span class="p">})</span>
+
+                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">deleted_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File deleted from the database and local directory.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File found in the local directory but not deleted from the database.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File not found in the database.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.delete_all_files">
+<a class="viewcode-back" href="../../database.html#database.database.Database.delete_all_files">[docs]</a>
+    <span class="k">def</span> <span class="nf">delete_all_files</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete all files from the database.</span>
+
+<span class="sd">        This method deletes all files from the database,</span>
+<span class="sd">        made for convenience to wipe it clean.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">delete_many</span><span class="p">({})</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All files deleted from the database.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Database.view_database">
+<a class="viewcode-back" href="../../database.html#database.database.Database.view_database">[docs]</a>
+    <span class="k">def</span> <span class="nf">view_database</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        View the database.</span>
+
+<span class="sd">        This method prints the content of the database,</span>
+<span class="sd">        just so one can see their names. Inforation such as keys,</span>
+<span class="sd">        even if encrypted, are not shown here.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Database content:&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;file_name&#39;</span><span class="p">,</span> <span class="s1">&#39;N/A&#39;</span><span class="p">)</span>
+            <span class="n">encrypted_file_path</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;encrypted_file_path&#39;</span><span class="p">,</span> <span class="s1">&#39;N/A&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File name: </span><span class="si">{</span><span class="n">file_name</span><span class="si">}</span><span class="s2">, encrypted file path: </span><span class="si">{</span><span class="n">encrypted_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, ITScutaru.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

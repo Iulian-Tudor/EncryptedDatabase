@@ -2,7 +2,7 @@ from math import gcd
 
 
 # Function to find the greatest common divisor
-def extended_gcd(aa, bb):
+def extended_gcd(aa:int, bb:int) -> tuple:
     """
     Function to find the greatest common divisor (gcd).
 
@@ -27,7 +27,7 @@ def extended_gcd(aa, bb):
 
 
 # Function to produce the private-key exponent
-def modinv(a, m):
+def modinv(a, m) -> int:
     """
     Function to produce the private-key exponent.
 
@@ -56,7 +56,7 @@ class Encryption:
     with asymmetric RSA.
     """
     @staticmethod
-    def generate_key_pair(p, q):
+    def generate_key_pair(p:int, q:int) -> tuple:
         """
         Generate a public and private key pair.
 
@@ -64,7 +64,16 @@ class Encryption:
         The RSA modulus is calculated as the product of p and q.
         The totient is calculated as the product of (p-1) and (q-1).
 
-        The totient is the number of co-prime numbers with n, smaller than n
+        The totient is the number of co-prime numbers with n, smaller than n and greater than 1.
+        The public exponent is calculated as the first number e, greater than 2, such that gcd(e, totient) = 1.
+        The private exponent is calculated as the multiplicative inverse of the public exponent modulo totient.
+
+        Parameters:
+        p (int): The first prime number.
+        q (int): The second prime number.
+
+        Returns:
+        tuple: A tuple containing the public and private key pair.
         """
         # Generate a public and private key pair
         RSA_modulus = p * q
@@ -78,24 +87,38 @@ class Encryption:
         return (public_exponent, RSA_modulus), (private_exponent, RSA_modulus)
 
     @staticmethod
-    def encrypt_file(content, public_key):
+    def encrypt_file(content:bytes, public_key:tuple) -> list[int]:
         """
         Encrypt the file content using the public key.
 
         This method takes the content of a file and a public key, and encrypts the content,
         asymmetrically, with RSA.
+
+        Parameters:
+        content (bytes): The content of the file to be encrypted.
+        public_key (tuple): The public key to be used for encryption.
+
+        Returns:
+        list[int]: The encrypted content of the file.
         """
         # Encrypt the file content using the public key
         e, n = public_key
         return [(byte ** e) % n for byte in content]
 
     @staticmethod
-    def decrypt_file(encrypted_content, private_key):
+    def decrypt_file(encrypted_content:bytes, private_key:tuple) -> bytes:
         """
         Decrypt the file content using the private key.
 
         This method takes the encrypted content of a file and a private key, and decrypts the content,
         doing the reverse of the encryption process.
+
+        Parameters:
+        encrypted_content (bytes): The encrypted content of the file to be decrypted.
+        private_key (tuple): The private key to be used for decryption.
+
+        Returns:
+        bytes: The decrypted content of the file.
         """
         # Decrypt the file content using the private key
         d, n = private_key

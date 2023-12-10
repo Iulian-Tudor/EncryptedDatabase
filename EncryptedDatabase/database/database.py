@@ -23,12 +23,15 @@ class Database:
         Initialize the Database class.
 
         This method initializes the MongoDB client, database, and collection.
+
+        Returns:
+        None
         """
         self.client = MongoClient('localhost', 27017)
         self.db = self.client['EncryptedDatabase']
         self.collection = self.db['file_collection']
 
-    def add_file_to_database(self, file_path, public_key, symmetric_key, encryption_method):
+    def add_file_to_database(self, file_path:str, public_key: tuple[int,int], symmetric_key:bytes, encryption_method:str) -> None:
         """
         Add a file to the database.
 
@@ -40,6 +43,15 @@ class Database:
 
         Once encryption is done, it also creates a variant of the encrypted_content locally, in the encrypted_directory,
         for convenience. This function also makes sure to perform checks regarding validify of sample and encryption attributes.
+
+        Parameters:
+        file_path (str): The path to the file to be added to the database.
+        public_key (tuple): The public key to be used for encryption.
+        symmetric_key (bytes): The symmetric key to be used for encryption.
+        encryption_method (str): The encryption method to be used for encryption.
+
+        Returns:
+        None
         """
         proceed = True
 
@@ -104,13 +116,20 @@ class Database:
             self.collection.insert_one(data)
             print("File added to the database.")
 
-    def get_file_from_database(self, file_name, private_key):
+    def get_file_from_database(self, file_name:str, private_key:tuple[int,int]) -> None:
         """
         Retrieve a file from the database.
 
         This method takes a file name and a private key, and retrieves the file from the database,
         in they decrypted form and either prints them to terminal if possible, or creates the file
         in an decrypted_directory to see the output.
+
+        Parameters:
+        file_name (str): The name of the file to be retrieved from the database.
+        private_key (tuple): The private key to be used for decryption.
+
+        Returns:
+        None
         """
         file_data = self.collection.find_one({'file_name': file_name})
 
@@ -147,12 +166,18 @@ class Database:
         else:
             print("File not found in the database.")
 
-    def delete_file(self, file_names):
+    def delete_file(self, file_names:str) -> None:
         """
         Delete a file from the database.
 
         This method takes a list of file names and deletes the files from the database,
         as well as the locally stored encrypted variant of it.
+
+        Parameters:
+        file_names (list): The list of file names to be deleted from the database.
+
+        Returns:
+        None
         """
         for file_name in file_names:
             file_data = self.collection.find_one({'file_name': file_name})
@@ -172,23 +197,29 @@ class Database:
             else:
                 print("File not found in the database.")
 
-    def delete_all_files(self):
+    def delete_all_files(self) -> None:
         """
         Delete all files from the database.
 
         This method deletes all files from the database,
         made for convenience to wipe it clean.
+
+        Returns:
+        None
         """
         self.collection.delete_many({})
         print("All files deleted from the database.")
 
-    def view_database(self):
+    def view_database(self) -> None:
         """
         View the database.
 
         This method prints the content of the database,
         just so one can see their names. Inforation such as keys,
         even if encrypted, are not shown here.
+
+        Returns:
+        None
         """
         files = self.collection.find()
 
