@@ -4,6 +4,7 @@ import pickle
 import imghdr
 from pymongo import MongoClient
 
+from cbc.cbc import CBC
 from encryption.encryption import Encryption
 from hybrid.hybrid import HybridEncryption
 
@@ -31,7 +32,7 @@ class Database:
         self.db = self.client['EncryptedDatabase']
         self.collection = self.db['file_collection']
 
-    def add_file_to_database(self, file_path:str, public_key: tuple[int,int], symmetric_key:bytes, encryption_method:str) -> None:
+    def add_file_to_database(self, file_path:str, public_key: tuple[int,int], encryption_method:str) -> None:
         """
         Add a file to the database.
 
@@ -47,7 +48,6 @@ class Database:
         Parameters:
         file_path (str): The path to the file to be added to the database.
         public_key (tuple): The public key to be used for encryption.
-        symmetric_key (bytes): The symmetric key to be used for encryption.
         encryption_method (str): The encryption method to be used for encryption.
 
         Returns:
@@ -86,12 +86,21 @@ class Database:
 
             encrypted_content = None
             encrypted_symmetric_key = None
+            data = {}
+            iv = None
 
             if encryption_method.lower() == 'rsa':
                 encrypted_content = Encryption.encrypt_file(content, public_key)
             elif encryption_method.lower() == 'hybrid':
+                symmetric_key = HybridEncryption.generate_symmetric_key()
                 encrypted_content = HybridEncryption.encrypt_file_content(content, symmetric_key)
                 encrypted_symmetric_key = HybridEncryption.encrypt_symmetric_key(symmetric_key, public_key)
+                data['encrypted_symmetric_key'] = encrypted_symmetric_key
+            #elif encryption_method.lower() == 'cbc':
+            #    iv = CBC.generate_iv()
+            #    symmetric_key = CBC.generate_symmetric_key()
+            #    encrypted_content = CBC.encrypt_message(content, symmetric_key, iv)
+            #    encrypted_symmetric_key = Encryption.encrypt_file(symmetric_key, public_key)
             else:
                 print("Invalid encryption method.")
                 proceed = False
@@ -109,9 +118,13 @@ class Database:
                 'encrypted_content': encrypted_content,
                 'encryption_method': encryption_method
             }
-
-            if encryption_method.lower() == 'hybrid':
+            
+            if encryption_method.lower() == 'cbc':
                 data['encrypted_symmetric_key'] = encrypted_symmetric_key
+                data['iv'] = iv
+            elif encryption_method.lower() == 'hybrid':
+                data['encrypted_symmetric_key'] = encrypted_symmetric_key
+            
 
             self.collection.insert_one(data)
             print("File added to the database.")
@@ -148,6 +161,11 @@ class Database:
                 encrypted_symmetric_key = file_data['encrypted_symmetric_key']
                 decrypted_symmetric_key = HybridEncryption.decrypt_symmetric_key(encrypted_symmetric_key, private_key)
                 decrypted_content = HybridEncryption.decrypt_file_content(encrypted_content, decrypted_symmetric_key)
+            #elif encryption_method.lower() == 'cbc':
+            #    encrypted_symmetric_key = file_data['encrypted_symmetric_key']
+            #    decrypted_symmetric_key = Encryption.decrypt_file(encrypted_symmetric_key, private_key)
+            #    iv = file_data['iv']
+            #    decrypted_content = CBC.decrypt_message(encrypted_content, decrypted_symmetric_key, iv)
             else:
                 print("Invalid encryption method.")
                 return
@@ -166,7 +184,7 @@ class Database:
         else:
             print("File not found in the database.")
 
-    def delete_file(self, file_names:str) -> None:
+    def delete_file(self, file_name:str) -> None:
         """
         Delete a file from the database.
 
@@ -179,23 +197,23 @@ class Database:
         Returns:
         None
         """
-        for file_name in file_names:
-            file_data = self.collection.find_one({'file_name': file_name})
+    
+        file_data = self.collection.find_one({'file_name': file_name})
 
-            if file_data:
-                # Delete from the local encrypted directory
-                encrypted_file_path = file_data['encrypted_file_path']
-                os.remove(encrypted_file_path)
+        if file_data:
+            # Delete from the local encrypted directory
+            encrypted_file_path = file_data['encrypted_file_path']
+            os.remove(encrypted_file_path)
 
-                # Delete from the database
-                result = self.collection.delete_one({'file_name': file_name})
+            # Delete from the database
+            result = self.collection.delete_one({'file_name': file_name})
 
-                if result.deleted_count > 0:
-                    print("File deleted from the database and local directory.")
-                else:
-                    print("File found in the local directory but not deleted from the database.")
+            if result.deleted_count > 0:
+                print("File deleted from the database and local directory.")
             else:
-                print("File not found in the database.")
+                print("File found in the local directory but not deleted from the database.")
+        else:
+            print("File not found in the database.")
 
     def delete_all_files(self) -> None:
         """

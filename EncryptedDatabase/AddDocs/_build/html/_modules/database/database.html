@@ -77,6 +77,7 @@
 <span class="kn">import</span> <span class="nn">imghdr</span>
 <span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
 
+<span class="kn">from</span> <span class="nn">cbc.cbc</span> <span class="kn">import</span> <span class="n">CBC</span>
 <span class="kn">from</span> <span class="nn">encryption.encryption</span> <span class="kn">import</span> <span class="n">Encryption</span>
 <span class="kn">from</span> <span class="nn">hybrid.hybrid</span> <span class="kn">import</span> <span class="n">HybridEncryption</span>
 
@@ -108,7 +109,7 @@
 
 <div class="viewcode-block" id="Database.add_file_to_database">
 <a class="viewcode-back" href="../../database.html#database.database.Database.add_file_to_database">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_file_to_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">public_key</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">],</span> <span class="n">symmetric_key</span><span class="p">:</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">encryption_method</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">add_file_to_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span><span class="nb">str</span><span class="p">,</span> <span class="n">public_key</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span><span class="nb">int</span><span class="p">],</span> <span class="n">encryption_method</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a file to the database.</span>
 
@@ -124,7 +125,6 @@
 <span class="sd">        Parameters:</span>
 <span class="sd">        file_path (str): The path to the file to be added to the database.</span>
 <span class="sd">        public_key (tuple): The public key to be used for encryption.</span>
-<span class="sd">        symmetric_key (bytes): The symmetric key to be used for encryption.</span>
 <span class="sd">        encryption_method (str): The encryption method to be used for encryption.</span>
 
 <span class="sd">        Returns:</span>
@@ -163,12 +163,21 @@
 
             <span class="n">encrypted_content</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">encrypted_symmetric_key</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">iv</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="k">if</span> <span class="n">encryption_method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;rsa&#39;</span><span class="p">:</span>
                 <span class="n">encrypted_content</span> <span class="o">=</span> <span class="n">Encryption</span><span class="o">.</span><span class="n">encrypt_file</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">public_key</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">encryption_method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">:</span>
+                <span class="n">symmetric_key</span> <span class="o">=</span> <span class="n">HybridEncryption</span><span class="o">.</span><span class="n">generate_symmetric_key</span><span class="p">()</span>
                 <span class="n">encrypted_content</span> <span class="o">=</span> <span class="n">HybridEncryption</span><span class="o">.</span><span class="n">encrypt_file_content</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">symmetric_key</span><span class="p">)</span>
                 <span class="n">encrypted_symmetric_key</span> <span class="o">=</span> <span class="n">HybridEncryption</span><span class="o">.</span><span class="n">encrypt_symmetric_key</span><span class="p">(</span><span class="n">symmetric_key</span><span class="p">,</span> <span class="n">public_key</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="s1">&#39;encrypted_symmetric_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">encrypted_symmetric_key</span>
+            <span class="c1">#elif encryption_method.lower() == &#39;cbc&#39;:</span>
+            <span class="c1">#    iv = CBC.generate_iv()</span>
+            <span class="c1">#    symmetric_key = CBC.generate_symmetric_key()</span>
+            <span class="c1">#    encrypted_content = CBC.encrypt_message(content, symmetric_key, iv)</span>
+            <span class="c1">#    encrypted_symmetric_key = Encryption.encrypt_file(symmetric_key, public_key)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid encryption method.&quot;</span><span class="p">)</span>
                 <span class="n">proceed</span> <span class="o">=</span> <span class="kc">False</span>
@@ -186,9 +195,13 @@
                 <span class="s1">&#39;encrypted_content&#39;</span><span class="p">:</span> <span class="n">encrypted_content</span><span class="p">,</span>
                 <span class="s1">&#39;encryption_method&#39;</span><span class="p">:</span> <span class="n">encryption_method</span>
             <span class="p">}</span>
-
-            <span class="k">if</span> <span class="n">encryption_method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">:</span>
+            
+            <span class="k">if</span> <span class="n">encryption_method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;cbc&#39;</span><span class="p">:</span>
                 <span class="n">data</span><span class="p">[</span><span class="s1">&#39;encrypted_symmetric_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">encrypted_symmetric_key</span>
+                <span class="n">data</span><span class="p">[</span><span class="s1">&#39;iv&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">iv</span>
+            <span class="k">elif</span> <span class="n">encryption_method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;hybrid&#39;</span><span class="p">:</span>
+                <span class="n">data</span><span class="p">[</span><span class="s1">&#39;encrypted_symmetric_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">encrypted_symmetric_key</span>
+            
 
             <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File added to the database.&quot;</span><span class="p">)</span></div>
@@ -228,6 +241,11 @@
                 <span class="n">encrypted_symmetric_key</span> <span class="o">=</span> <span class="n">file_data</span><span class="p">[</span><span class="s1">&#39;encrypted_symmetric_key&#39;</span><span class="p">]</span>
                 <span class="n">decrypted_symmetric_key</span> <span class="o">=</span> <span class="n">HybridEncryption</span><span class="o">.</span><span class="n">decrypt_symmetric_key</span><span class="p">(</span><span class="n">encrypted_symmetric_key</span><span class="p">,</span> <span class="n">private_key</span><span class="p">)</span>
                 <span class="n">decrypted_content</span> <span class="o">=</span> <span class="n">HybridEncryption</span><span class="o">.</span><span class="n">decrypt_file_content</span><span class="p">(</span><span class="n">encrypted_content</span><span class="p">,</span> <span class="n">decrypted_symmetric_key</span><span class="p">)</span>
+            <span class="c1">#elif encryption_method.lower() == &#39;cbc&#39;:</span>
+            <span class="c1">#    encrypted_symmetric_key = file_data[&#39;encrypted_symmetric_key&#39;]</span>
+            <span class="c1">#    decrypted_symmetric_key = Encryption.decrypt_file(encrypted_symmetric_key, private_key)</span>
+            <span class="c1">#    iv = file_data[&#39;iv&#39;]</span>
+            <span class="c1">#    decrypted_content = CBC.decrypt_message(encrypted_content, decrypted_symmetric_key, iv)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid encryption method.&quot;</span><span class="p">)</span>
                 <span class="k">return</span>
@@ -249,7 +267,7 @@
 
 <div class="viewcode-block" id="Database.delete_file">
 <a class="viewcode-back" href="../../database.html#database.database.Database.delete_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_names</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">delete_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span><span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete a file from the database.</span>
 
@@ -262,23 +280,23 @@
 <span class="sd">        Returns:</span>
 <span class="sd">        None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">file_names</span><span class="p">:</span>
-            <span class="n">file_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="n">file_name</span><span class="p">})</span>
+    
+        <span class="n">file_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="n">file_name</span><span class="p">})</span>
 
-            <span class="k">if</span> <span class="n">file_data</span><span class="p">:</span>
-                <span class="c1"># Delete from the local encrypted directory</span>
-                <span class="n">encrypted_file_path</span> <span class="o">=</span> <span class="n">file_data</span><span class="p">[</span><span class="s1">&#39;encrypted_file_path&#39;</span><span class="p">]</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">encrypted_file_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_data</span><span class="p">:</span>
+            <span class="c1"># Delete from the local encrypted directory</span>
+            <span class="n">encrypted_file_path</span> <span class="o">=</span> <span class="n">file_data</span><span class="p">[</span><span class="s1">&#39;encrypted_file_path&#39;</span><span class="p">]</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">encrypted_file_path</span><span class="p">)</span>
 
-                <span class="c1"># Delete from the database</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">delete_one</span><span class="p">({</span><span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="n">file_name</span><span class="p">})</span>
+            <span class="c1"># Delete from the database</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">delete_one</span><span class="p">({</span><span class="s1">&#39;file_name&#39;</span><span class="p">:</span> <span class="n">file_name</span><span class="p">})</span>
 
-                <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">deleted_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File deleted from the database and local directory.&quot;</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File found in the local directory but not deleted from the database.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">deleted_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File deleted from the database and local directory.&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File not found in the database.&quot;</span><span class="p">)</span></div>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File found in the local directory but not deleted from the database.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File not found in the database.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Database.delete_all_files">

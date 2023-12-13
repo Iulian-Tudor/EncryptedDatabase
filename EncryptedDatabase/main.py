@@ -2,7 +2,6 @@ import sys
 
 from database.database import Database
 from encryption.encryption import Encryption
-from hybrid.hybrid import HybridEncryption
 
 
 def main() -> None:
@@ -24,8 +23,7 @@ def main() -> None:
 
     menu = {
         1: lambda: database.add_file_to_database(input("\nEnter file path: "), public_key,
-                                                 HybridEncryption.generate_symmetric_key(),
-                                                 input("\nEnter encryption method (RSA/Hybrid): ")),
+                                                 input("\nEnter encryption method (RSA/Hybrid/CBC): ")),
         2: lambda: database.get_file_from_database(input("\nEnter file name: "), private_key),
         3: lambda: database.delete_file(input("\nEnter file name: ")),
         4: lambda: database.delete_all_files(),

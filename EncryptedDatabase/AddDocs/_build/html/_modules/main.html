@@ -75,7 +75,6 @@
 
 <span class="kn">from</span> <span class="nn">database.database</span> <span class="kn">import</span> <span class="n">Database</span>
 <span class="kn">from</span> <span class="nn">encryption.encryption</span> <span class="kn">import</span> <span class="n">Encryption</span>
-<span class="kn">from</span> <span class="nn">hybrid.hybrid</span> <span class="kn">import</span> <span class="n">HybridEncryption</span>
 
 
 <div class="viewcode-block" id="main">
@@ -99,8 +98,7 @@
 
     <span class="n">menu</span> <span class="o">=</span> <span class="p">{</span>
         <span class="mi">1</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">add_file_to_database</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Enter file path: &quot;</span><span class="p">),</span> <span class="n">public_key</span><span class="p">,</span>
-                                                 <span class="n">HybridEncryption</span><span class="o">.</span><span class="n">generate_symmetric_key</span><span class="p">(),</span>
-                                                 <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Enter encryption method (RSA/Hybrid): &quot;</span><span class="p">)),</span>
+                                                 <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Enter encryption method (RSA/Hybrid/CBC): &quot;</span><span class="p">)),</span>
         <span class="mi">2</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">get_file_from_database</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Enter file name: &quot;</span><span class="p">),</span> <span class="n">private_key</span><span class="p">),</span>
         <span class="mi">3</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">delete_file</span><span class="p">(</span><span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Enter file name: &quot;</span><span class="p">)),</span>
         <span class="mi">4</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">database</span><span class="o">.</span><span class="n">delete_all_files</span><span class="p">(),</span>
