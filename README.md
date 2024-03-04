@@ -13,5 +13,5 @@ _3. Database module:_ Pretty self explanatory, it's the module where anything th
 
 _Future modules could be added, if I decide I want to incorporate 2 other projects into this one._
 
-_The ECB module is functional in the sense that it encrypts and decrypts without running errors, but it still requires debugging as the contents it decrypts are not the same as the original message._
+_The CBC module is functional in the sense that it encrypts and decrypts without running errors, but it still requires debugging as the contents it decrypts are not the same as the original message._
     
