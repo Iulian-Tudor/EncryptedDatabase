@@ -12,4 +12,6 @@ _2. Hybrid module:_ A rudimentary hybrid cryptography implementation, using a si
 _3. Database module:_ Pretty self explanatory, it's the module where anything that has to interact with the Database goes into, whether we're talking about adding, removing or reading a file from the Database. It's, perhaps, the simplest and smallest module of them all, as once it's written, it, more or less, remains untouched.
 
 _Future modules could be added, if I decide I want to incorporate 2 other projects into this one._
+
+_The ECB module is functional in the sense that it encrypts and decrypts without running errors, but it still requires debugging as the contents it decrypts are not the same as the original message._
     
