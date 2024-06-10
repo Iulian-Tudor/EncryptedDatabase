@@ -1,5 +1,5 @@
 import os
-from encryption.encryption import Encryption
+from rsa.rsa import Encryption
 
 
 class HybridEncryption:

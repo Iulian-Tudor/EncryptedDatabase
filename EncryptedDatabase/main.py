@@ -1,7 +1,7 @@
 import sys
 
 from database.database import Database
-from encryption.encryption import Encryption
+from rsa.rsa import Encryption
 
 
 def main() -> None:

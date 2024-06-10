@@ -5,7 +5,7 @@ import imghdr
 from pymongo import MongoClient
 
 from cbc.cbc import CBC
-from encryption.encryption import Encryption
+from rsa.rsa import Encryption
 from hybrid.hybrid import HybridEncryption
 
 decrypted_directory = 'D:\\Anul3\\Python\\EncrypteDatabase\\EncryptedDatabase\\DecryptedTexts'
